@@ -390,10 +390,10 @@ def format(s, *args, **kwargs):
     def sub(match):
         char = match.group(1)
         if char == 's':
-            return str(args.pop())
+            return unicode(args.pop())
         elif char == 'i':
             # XXX Improve me!
-            return str(args.pop())
+            return unicode(args.pop())
         elif char.endswith('f'):
             return ('%'+char) % args.pop()
         elif char == 'b':

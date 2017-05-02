@@ -107,7 +107,7 @@ def registerPlugin(name, currentValue=None, public=True):
 def get(group, channel=None):
     if group.channelValue and \
        channel is not None and ircutils.isChannel(channel):
-        return group.get(channel)()
+        return group.get(str(channel))()
     else:
         return group()
 
