@@ -90,13 +90,16 @@ def joinHostmask(nick, ident, host):
     assert nick and ident and host
     return intern('%s!%s@%s' % (nick, ident, host))
 
-_rfc1459trans = string.maketrans(string.ascii_uppercase + r'\[]~',
-                                 string.ascii_lowercase + r'|{}^')
+
+def maketrans(tabin, tabout):
+    return dict(zip(map(ord, tabin), map(ord, tabout)))
+_rfc1459trans = maketrans(string.ascii_uppercase + r'\[]~',
+                          string.ascii_lowercase + r'|{}^')
 def toLower(s, casemapping=None):
     """s => s
     Returns the string s lowered according to IRC case rules."""
     if casemapping is None or casemapping == 'rfc1459':
-        return s.translate(_rfc1459trans)
+        return unicode(s).translate(_rfc1459trans)
     elif casemapping == 'ascii': # freenode
         return s.lower()
     else:
