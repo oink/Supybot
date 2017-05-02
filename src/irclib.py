@@ -761,7 +761,8 @@ class Irc(IrcCommandDispatcher):
         elif self.zombie:
             # We kill the driver here so it doesn't continue to try to
             # take messages from us.
-            self.driver.die()
+            if self.driver:
+                self.driver.die()
             self._reallyDie()
         else:
             return None
