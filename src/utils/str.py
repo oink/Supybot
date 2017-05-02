@@ -439,7 +439,7 @@ def format(s, *args, **kwargs):
         else:
             raise ValueError, 'Invalid char in sub (in format).'
     try:
-        return _formatRe.sub(sub, s)
+        return _formatRe.sub(sub, unicode(s))
     except IndexError:
         raise ValueError, 'Extra format chars in format spec: %r' % s
 
