@@ -760,6 +760,8 @@ class Databases(registry.SpaceSeparatedListOfStrings):
             v = ['anydbm', 'cdb', 'flat', 'pickle']
             if 'sqlite' in sys.modules:
                 v.insert(0, 'sqlite')
+            if 'sqlite3' in sys.modules:
+                v.insert(0, 'sqlite3')
         return v
 
     def serialize(self):

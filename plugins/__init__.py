@@ -169,7 +169,10 @@ class ChannelDBHandler(object):
             db = self.makeDb(self.makeFilename(channel))
         else:
             db = self.dbCache[channel]
-        db.autocommit = 1
+        try:
+            db.autocommit = 1
+        except AttributeError:
+            db.isolation_level = None
         return db
 
     def die(self):
