@@ -53,13 +53,17 @@ class Internet(callbacks.Plugin):
                 irc.reply(hostname)
         else:
             try:
-                ip = socket.getaddrinfo(host, None)[0][4][0]
-                if ip == '64.94.110.11': # Verisign sucks!
-                    irc.reply('Host not found.')
-                else:
-                    irc.reply(ip)
+                result = []
+                for addressInfo in socket.getaddrinfo(host, 0, 0, 0, socket.SOL_TCP):
+                    ip = addressInfo[4][0]
+                    if ip == '64.94.110.11': # Verisign sucks!
+                        result.append('Host not found.')
+                        break
+                    result.append(ip)
             except socket.error:
                 irc.reply('Host not found.')
+            else:
+                irc.reply(" ".join(result))
     dns = wrap(dns, ['something'])
 
     _domain = ['Domain Name', 'Server Name', 'domain']
