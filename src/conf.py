@@ -758,8 +758,6 @@ class Databases(registry.SpaceSeparatedListOfStrings):
         v = super(Databases, self).__call__()
         if not v:
             v = ['anydbm', 'cdb', 'flat', 'pickle']
-            if 'sqlite' in sys.modules:
-                v.insert(0, 'sqlite')
             if 'sqlite3' in sys.modules:
                 v.insert(0, 'sqlite3')
         return v

@@ -288,7 +288,7 @@ class Factoids(callbacks.Plugin, plugins.ChannelDBHandler):
             irc.replySuccess()
         else:
             if number is not None:
-                results = len(rows)()
+                results = rows
                 try:
                     (_, id) = results[number-1]
                 except IndexError:
@@ -301,7 +301,7 @@ class Factoids(callbacks.Plugin, plugins.ChannelDBHandler):
                 irc.error('%s factoids have that key.  '
                           'Please specify which one to remove, '
                           'or use * to designate all of them.' %
-                          cursor.rowcount)
+                          len(rows))
     forget = wrap(forget, ['channel', many('something')])
 
     def random(self, irc, msg, args, channel):

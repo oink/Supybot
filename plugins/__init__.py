@@ -55,14 +55,14 @@ try:
             mxCrap[name] = module
             sys.modules.pop(name)
     # Now that the mx crap is gone, we can import sqlite.
-    import sqlite
+    import sqlite3
     # And now we'll put it back, even though it sucks.
     sys.modules.update(mxCrap)
     # Just in case, we'll do this as well.  It doesn't seem to work fine by
     # itself, though, or else we'd just do this in the first place.
-    sqlite.have_datetime = False
-    Connection = sqlite.Connection
-    class MyConnection(sqlite.Connection):
+    sqlite3.have_datetime = False
+    Connection = sqlite3.Connection
+    class MyConnection(sqlite3.Connection):
         def commit(self, *args, **kwargs):
             if self.autocommit:
                 return
@@ -79,9 +79,10 @@ try:
                     log.exception('Uncaught exception in __del__:')
                 except:
                     pass
-    sqlite.Connection = MyConnection
+    sqlite3.Connection = MyConnection
     #del Connection.__del__
-except ImportError:
+except ImportError as e:
+    print repr(e)
     pass
 
 
