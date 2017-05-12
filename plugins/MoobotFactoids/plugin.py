@@ -32,7 +32,7 @@ import time
 import shlex
 import string
 
-from cStringIO import StringIO
+from StringIO import StringIO
 
 import supybot.conf as conf
 import supybot.ircdb as ircdb

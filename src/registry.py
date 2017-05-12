@@ -144,6 +144,7 @@ def isValidRegistryName(name):
     return len(name.split()) == 1 and not name.startswith('_')
 
 def escape(name):
+    name = name.encode("UTF-8")
     name = name.encode('string_escape')
     name = name.replace(':', '\\:')
     name = name.replace('.', '\\.')

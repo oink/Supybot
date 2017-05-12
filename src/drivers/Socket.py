@@ -103,7 +103,8 @@ class SocketDriver(drivers.IrcDriver, drivers.ServersMixin):
             while msgs[-1] is not None:
                 msgs.append(self.irc.takeMsg())
             del msgs[-1]
-            self.outbuffer += ''.join(imap(str, msgs))
+            encoding = self.networkGroup.get('encoding').value
+            self.outbuffer += ''.join(imap(lambda s: unicode(s).encode(encoding), msgs))
         if self.outbuffer:
             try:
                 sent = self.conn.send(self.outbuffer)
@@ -131,8 +132,9 @@ class SocketDriver(drivers.IrcDriver, drivers.ServersMixin):
             self.eagains = 0 # If we successfully recv'ed, we can reset this.
             lines = self.inbuffer.split('\n')
             self.inbuffer = lines.pop()
+            encoding = self.networkGroup.get('encoding').value
             for line in lines:
-                msg = drivers.parseMsg(line)
+                msg = drivers.parseMsg(line, encoding)
                 if msg is not None:
                     self.irc.feedMsg(msg)
         except socket.timeout:

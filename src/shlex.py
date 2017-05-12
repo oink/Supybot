@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 """A lexical analyzer class for simple shell-like syntaxes."""
 
 # Module and documentation by Eric S. Raymond, 21 Dec 1998
@@ -6,6 +7,7 @@
 
 import os.path
 import sys
+from StringIO import StringIO
 
 __all__ = ["shlex"]
 
@@ -19,6 +21,7 @@ class shlex:
             self.instream = sys.stdin
             self.infile = None
         self.commenters = '#'
+        self.nonwordchars = None
         self.wordchars = ('abcdfeghijklmnopqrstuvwxyz'
                           'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_')
         self.whitespace = ' \t\r\n'
@@ -35,6 +38,11 @@ class shlex:
             print 'shlex: reading from %s, line %d' \
                   % (self.instream, self.lineno)
 
+    def iswordchar(self, char):
+        if self.nonwordchars:
+            return char not in self.nonwordchars
+        else:
+            return char in self.wordchars
     def push_token(self, tok):
         "Push a token onto the stack popped by the get_token method"
         if self.debug >= 1:
@@ -121,7 +129,7 @@ class shlex:
                 elif nextchar in self.commenters:
                     self.instream.readline()
                     self.lineno = self.lineno + 1
-                elif nextchar in self.wordchars:
+                elif self.iswordchar(nextchar):
                     self.token = nextchar
                     self.state = 'a'
                 elif nextchar in self.quotes:
@@ -166,7 +174,7 @@ class shlex:
                 elif nextchar in self.commenters:
                     self.instream.readline()
                     self.lineno = self.lineno + 1
-                elif nextchar in self.wordchars or nextchar in self.quotes:
+                elif self.iswordchar(nextchar) or nextchar in self.quotes:
                     self.token = self.token + nextchar
                 else:
                     self.pushback = [nextchar] + self.pushback

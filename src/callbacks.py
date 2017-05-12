@@ -39,7 +39,7 @@ import shlex
 import getopt
 import inspect
 import operator
-from cStringIO import StringIO
+from StringIO import StringIO
 
 from . import (conf, ircdb, irclib, ircmsgs, ircutils, log, registry, utils,
         world)
@@ -250,10 +250,10 @@ class Tokenizer(object):
     #
     # These are the characters valid in a token.  Everything printable except
     # double-quote, left-bracket, and right-bracket.
-    validChars = utils.str.chars.translate(utils.str.chars, '\x00\r\n \t')
+    invalidChars = u'\x00\r\n \t'
     def __init__(self, brackets='', pipe=False, quotes='"'):
         if brackets:
-            self.validChars=self.validChars.translate(utils.str.chars, brackets)
+            self.invalidChars += brackets
             self.left = brackets[0]
             self.right = brackets[1]
         else:
@@ -261,9 +261,9 @@ class Tokenizer(object):
             self.right = ''
         self.pipe = pipe
         if self.pipe:
-            self.validChars = self.validChars.translate(utils.str.chars, '|')
+            self.invalidChars += u'|'
         self.quotes = quotes
-        self.validChars = self.validChars.translate(utils.str.chars, quotes)
+        self.invalidChars += quotes
 
 
     def _handleToken(self, token):
@@ -295,7 +295,7 @@ class Tokenizer(object):
         lexer = shlex.shlex(StringIO(s))
         lexer.commenters = ''
         lexer.quotes = self.quotes
-        lexer.wordchars = self.validChars
+        lexer.nonwordchars = self.invalidChars
         args = []
         ends = []
         while True:
@@ -347,6 +347,7 @@ def tokenize(s, channel=None):
         ret = Tokenizer(brackets=brackets,pipe=pipe,quotes=quotes).tokenize(s)
         return ret
     except ValueError, e:
+        log.exception(e)
         raise SyntaxError, str(e)
 
 def formatCommand(command):

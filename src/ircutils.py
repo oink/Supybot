@@ -40,7 +40,7 @@ import time
 import random
 import string
 import textwrap
-from cStringIO import StringIO as sio
+from StringIO import StringIO as sio
 
 from . import utils
 
@@ -82,13 +82,13 @@ def splitHostmask(hostmask):
     assert isUserHostmask(hostmask)
     nick, rest = hostmask.split('!', 1)
     user, host = rest.split('@', 1)
-    return (intern(nick), intern(user), intern(host))
+    return (nick, intern(user.encode("UTF-8")), intern(host.encode("UTF-8")))
 
 def joinHostmask(nick, ident, host):
     """nick, user, host => hostmask
     Joins the nick, ident, host into a user hostmask."""
     assert nick and ident and host
-    return intern('%s!%s@%s' % (nick, ident, host))
+    return '%s!%s@%s' % (nick, ident, host)
 
 
 def maketrans(tabin, tabout):

@@ -30,7 +30,6 @@
 
 import os
 import time
-from cStringIO import StringIO
 
 import supybot.conf as conf
 import supybot.world as world

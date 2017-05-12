@@ -31,7 +31,7 @@
 import re
 import string
 import random
-from cStringIO import StringIO
+from StringIO import StringIO
 
 import supybot.conf as conf
 import supybot.utils as utils

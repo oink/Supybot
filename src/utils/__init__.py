@@ -34,7 +34,7 @@ import sys
 # csv.{join,split} -- useful functions that should exist.
 ###
 import csv
-import cStringIO as StringIO
+import StringIO as StringIO
 def join(L):
     fd = StringIO.StringIO()
     writer = csv.writer(fd)

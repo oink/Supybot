@@ -66,7 +66,7 @@ class SupyIrcProtocol(LineReceiver):
         self.mostRecentCall = reactor.callLater(0.1, self.checkIrcForMsgs)
 
     def lineReceived(self, line):
-        msg = drivers.parseMsg(line)
+        msg = drivers.parseMsg(line, self.encoding)
         if msg is not None:
             self.irc.feedMsg(msg)
 
@@ -74,7 +74,7 @@ class SupyIrcProtocol(LineReceiver):
         if self.connected:
             msg = self.irc.takeMsg()
             while msg:
-                self.transport.write(str(msg))
+                self.transport.write(unicode(msg).encode(self.encoding))
                 msg = self.irc.takeMsg()
         self.mostRecentCall = reactor.callLater(0.1, self.checkIrcForMsgs)
 
@@ -149,6 +149,7 @@ class SupyReconnectingFactory(ReconnectingClientFactory, drivers.ServersMixin):
     def buildProtocol(self, addr):
         protocol = ReconnectingClientFactory.buildProtocol(self, addr)
         protocol.irc = self.irc
+        protocol.encoding = self.networkGroup.get('encoding').value
         return protocol
 
 Driver = SupyReconnectingFactory

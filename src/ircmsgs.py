@@ -79,7 +79,7 @@ class IrcMsg(object):
     # data.  Goodbye, __slots__.
     # On second thought, let's use methods for tagging.
     __slots__ = ('args', 'command', 'host', 'nick', 'prefix', 'user',
-                 '_hash', '_str', '_repr', '_len', 'tags')
+                 '_hash', '_str', '_repr', '_len', 'tags', 'originalString')
     def __init__(self, s='', command='', args=(), prefix='', msg=None):
         assert not (msg and s), 'IrcMsg.__init__ cannot accept both s and msg'
         if not s and not command and not msg:
@@ -89,8 +89,8 @@ class IrcMsg(object):
         self._hash = None
         self._len = None
         self.tags = {}
+        self.originalString = s
         if s:
-            originalString = s
             try:
                 if not s.endswith('\n'):
                     s += '\n'
@@ -107,7 +107,7 @@ class IrcMsg(object):
                     self.args = s.split()
                 self.command = self.args.pop(0)
             except (IndexError, ValueError):
-                raise MalformedIrcMsg, repr(originalString)
+                raise MalformedIrcMsg, repr(self.originalString)
         else:
             if msg is not None:
                 if prefix:
@@ -135,6 +135,9 @@ class IrcMsg(object):
             (self.nick, self.user, self.host) = (self.prefix,)*3
 
     def __str__(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
         if self._str is not None:
             return self._str
         if self.prefix:

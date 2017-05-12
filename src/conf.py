@@ -266,6 +266,8 @@ def registerNetwork(name, password='', ssl=False):
     registerGlobalValue(network, 'ssl', registry.Boolean(ssl,
         """Determines whether the bot will attempt to connect with SSL sockets
         to %s.""" % name))
+    registerChannelValue(network, 'encoding', registry.String('UTF-8',
+        """I/O Encoding of this server""", private=True))
     registerChannelValue(network.channels, 'key', registry.String('',
         """Determines what key (if any) will be used to join the channel.""", private=True))
     return network

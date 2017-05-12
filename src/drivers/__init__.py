@@ -206,10 +206,11 @@ def newDriver(irc, moduleName=None):
     irc.driver = driver
     return driver
 
-def parseMsg(s):
+def parseMsg(s, encoding):
     s = s.strip()
     if s:
-        msg = ircmsgs.IrcMsg(s)
+        msg = ircmsgs.IrcMsg(s.decode(encoding))
+        msg.originalString = s
         return msg
     else:
         return None
